@@ -10,6 +10,8 @@ export const ANTD_CONFIG = {
 		colorText: COLD_GREY,
 		colorLink: DEEP_PURPLE,
 		colorLinkHover: ORANGE,
+		fontSizeHeading1: 24,
+		fontSizeHeading2: 16,
 	},
 	components: {
 		/**
