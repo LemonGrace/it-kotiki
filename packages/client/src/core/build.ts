@@ -85,12 +85,12 @@ export class Enemy extends Sprite {
 		this.draw();
 
 		const path = this.path[this.pointIndex];
-		if(!path) return
-			const yDistance = path.y - this.center.y;
-			const xDistance = path.x - this.center.x;
-			const angle = Math.atan2(yDistance, xDistance);
-			this.center.x += Math.cos(angle);
-			this.center.y += Math.sin(angle);
+		if (!path) return;
+		const yDistance = path.y - this.center.y;
+		const xDistance = path.x - this.center.x;
+		const angle = Math.atan2(yDistance, xDistance);
+		this.center.x += Math.cos(angle);
+		this.center.y += Math.sin(angle);
 		if (Math.round(this.center.x) === path.x && Math.round(this.center.y) === path.y) {
 			this.pointIndex++;
 		}
@@ -130,7 +130,7 @@ class Projectile {
 
 	update() {
 		this.draw();
-		if (this.target === null) return
+		if (this.target === null) return;
 
 		const angle = Math.atan2(this.target.center.y - this.position.y, this.target.center.x - this.position.x);
 		this.velocity.x = Math.cos(angle) * this.speed;
