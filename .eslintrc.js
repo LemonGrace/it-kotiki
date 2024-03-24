@@ -47,7 +47,7 @@ module.exports = {
 		'array-bracket-newline': ['error', { multiline: true }],
 		'array-bracket-spacing': ['error', 'never'],
 		'object-curly-spacing': ['error', 'always'],
-		'object-curly-newline': 0,
+		'object-curly-newline': ['error', { consistent: true }],
 		'object-property-newline': ['error', { allowMultiplePropertiesPerLine: false }],
 		'comma-dangle': ['error', 'always-multiline'],
 		'no-multiple-empty-lines': ['error', { max: 2 }],
