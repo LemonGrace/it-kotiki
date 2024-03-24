@@ -4,12 +4,7 @@ export type ObjectNum = {
 	[key: string]: number;
 };
 
-export type CenterType = {
-	x: number;
-	y: number;
-};
-
-export type PositionType = {
+export type CoordsType = {
 	x: number;
 	y: number;
 };
@@ -18,36 +13,31 @@ export type ObjectImg = {
 	[key: string]: HTMLImageElement;
 };
 
-export type IPath = {
-	x: number;
-	y: number;
-};
-
 export interface IProps {
 	canvas: CanvasRenderingContext2D;
-	position: PositionType;
+	position: CoordsType;
 	velocity: number;
 	target: null | Enemy;
 }
 
 export interface IEnemy extends IProps {
-	path: Array<IPath>;
+	path: Array<CoordsType>;
 }
 
 export interface IProjectile {
 	canvas: CanvasRenderingContext2D;
-	position: PositionType;
+	position: CoordsType;
 	target: Enemy;
 }
 
 export interface IBoundary {
 	canvas: CanvasRenderingContext2D;
-	position: PositionType;
+	position: CoordsType;
 }
 
 export interface IHome {
 	canvas: CanvasRenderingContext2D;
-	position: PositionType;
+	position: CoordsType;
 }
 
 export interface ValidEnemyType {

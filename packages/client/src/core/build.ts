@@ -5,7 +5,7 @@ class Sprite {
 	position: models.ObjectNum;
 	width = 0;
 	height = 0;
-	center: models.CenterType;
+	center: models.CoordsType;
 	velocity: number;
 	constructor(props: models.IProps) {
 		this.c = props.canvas;
@@ -85,15 +85,14 @@ export class Enemy extends Sprite {
 		this.draw();
 
 		const path = this.path[this.pointIndex];
-		if (path) {
+		if(!path) return
 			const yDistance = path.y - this.center.y;
 			const xDistance = path.x - this.center.x;
 			const angle = Math.atan2(yDistance, xDistance);
 			this.center.x += Math.cos(angle);
 			this.center.y += Math.sin(angle);
-			if (Math.round(this.center.x) === path.x && Math.round(this.center.y) === path.y) {
-				this.pointIndex++;
-			}
+		if (Math.round(this.center.x) === path.x && Math.round(this.center.y) === path.y) {
+			this.pointIndex++;
 		}
 	}
 }
@@ -106,7 +105,7 @@ class Projectile {
 	};
 	radius = 4;
 	speed = 8;
-	center: models.CenterType;
+	center: models.CoordsType;
 	position = {
 		x: 0,
 		y: 0,
@@ -131,14 +130,13 @@ class Projectile {
 
 	update() {
 		this.draw();
-		if (this.target !== null) {
-			const angle = Math.atan2(this.target.center.y - this.position.y, this.target.center.x - this.position.x);
-			this.velocity.x = Math.cos(angle) * this.speed;
-			this.velocity.y = Math.sin(angle) * this.speed;
+		if (this.target === null) return
 
-			this.position.x += this.velocity.x;
-			this.position.y += this.velocity.y;
-		}
+		const angle = Math.atan2(this.target.center.y - this.position.y, this.target.center.x - this.position.x);
+		this.velocity.x = Math.cos(angle) * this.speed;
+		this.velocity.y = Math.sin(angle) * this.speed;
+		this.position.x += this.velocity.x;
+		this.position.y += this.velocity.y;
 	}
 }
 
@@ -147,7 +145,7 @@ export class Boundary {
 	width = 64;
 	height = 64;
 	radius = this.width / 2;
-	position: models.PositionType;
+	position: models.CoordsType;
 	constructor(props: models.IBoundary) {
 		this.c = props.canvas;
 		this.position = props.position;
