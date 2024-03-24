@@ -6,6 +6,7 @@ export enum EPATH {
 	ABOUT = '/about',
 	LEADER_BOARD = '/leader-board',
 	FORUM = '/forum',
+	GAME = '/game',
 }
 
 export const enum EPAGE_TYPE {

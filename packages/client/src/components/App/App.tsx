@@ -4,6 +4,7 @@ import { Template } from '../Template/Template';
 import { NotFound } from '../NotFound/NotFound';
 import { EPAGE_TYPE, EPATH } from '../../models/models';
 import { SignPage } from '../../pages/SignPage/SignPage';
+import { Game } from '../../pages/Game/Game';
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 				<Route path={EPATH.ABOUT} element={<Template />} />
 				<Route path={EPATH.LEADER_BOARD} element={<Template />} />
 				<Route path={EPATH.FORUM} element={<Template />} />
+				<Route path={EPATH.GAME} element={<Game />} />
 				<Route path="/*" element={<NotFound />} />
 			</Route>
 		</Routes>
