@@ -1,6 +1,8 @@
-export const distanceHypot = (a: any, b: any, checkX = 0, checkY = 0) => {
-	const xDifference = a.center.x - b.center.x + checkX;
-	const yDifference = a.center.y - b.center.y + checkY;
+import { CoordsType } from '../models/models';
+
+export const distanceHypot = (a: CoordsType, b: CoordsType, checkX = 0, checkY = 0) => {
+	const xDifference = a.x - b.x + checkX;
+	const yDifference = a.y - b.y + checkY;
 	const distance = Math.hypot(xDifference, yDifference);
 	return distance;
 };

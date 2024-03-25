@@ -1,16 +1,20 @@
-import { Enemy } from '../build';
+import { Enemy } from '../classes/Enemy';
 
 export type ObjectNum = {
 	[key: string]: number;
 };
 
-export type CoordsType = {
-	x: number;
-	y: number;
+export type ObjectString = {
+	[key: string]: string;
 };
 
 export type ObjectImg = {
 	[key: string]: HTMLImageElement;
+};
+
+export type CoordsType = {
+	x: number;
+	y: number;
 };
 
 export interface IProps {
