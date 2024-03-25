@@ -1,5 +1,5 @@
 import { PROJECTILE_RADIUS_SPRITE, PROJECTILE_SPEED } from '../../constants/core.config';
-import * as models from '../models/models';
+import { CordsType, IProjectile } from '../models/models';
 import { Enemy } from './Enemy';
 
 export class Projectile {
@@ -10,13 +10,13 @@ export class Projectile {
 	};
 	radius = PROJECTILE_RADIUS_SPRITE;
 	speed = PROJECTILE_SPEED;
-	center: models.CoordsType;
+	center: CordsType;
 	position = {
 		x: 0,
 		y: 0,
 	};
 	target: Enemy;
-	constructor(props: models.IProjectile) {
+	constructor(props: IProjectile) {
 		this.target = props.target;
 		this.c = props.canvas;
 		this.position = props.position;

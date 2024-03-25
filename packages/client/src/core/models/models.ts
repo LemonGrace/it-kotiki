@@ -12,36 +12,27 @@ export type ObjectImg = {
 	[key: string]: HTMLImageElement;
 };
 
-export type CoordsType = {
+export type CordsType = {
 	x: number;
 	y: number;
 };
 
-export interface IProps {
+export interface IDefaultProps {
 	canvas: CanvasRenderingContext2D;
-	position: CoordsType;
+	position: CordsType;
+}
+
+export interface IProps extends IDefaultProps {
 	velocity: number;
 	target: null | Enemy;
 }
 
 export interface IEnemy extends IProps {
-	path: Array<CoordsType>;
+	path: Array<CordsType>;
 }
 
-export interface IProjectile {
-	canvas: CanvasRenderingContext2D;
-	position: CoordsType;
+export interface IProjectile extends IDefaultProps {
 	target: Enemy;
-}
-
-export interface IBoundary {
-	canvas: CanvasRenderingContext2D;
-	position: CoordsType;
-}
-
-export interface IHome {
-	canvas: CanvasRenderingContext2D;
-	position: CoordsType;
 }
 
 export interface ValidEnemyType {
@@ -55,3 +46,16 @@ export interface IKeys {
 type KeysType = {
 	pressed: boolean;
 };
+
+export type MyNeighboursType = {
+	x: number;
+	y: number;
+}[];
+
+export interface IMyNode {
+	value: number;
+	x: number;
+	y: number;
+	f: number;
+	g: number;
+}

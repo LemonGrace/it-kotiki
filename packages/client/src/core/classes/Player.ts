@@ -1,8 +1,8 @@
 import { Sprite } from './Sprite';
-import * as models from '../models/models';
 import { Projectile } from './Projectile';
 import { Enemy } from './Enemy';
 import { PLAYER_ATTACKRANGE, PLAYER_HEIGHT, PLAYER_RADIUS_SPRITE, PLAYER_WEITH } from '../../constants/core.config';
+import { IProps } from '../models/models';
 
 export class Player extends Sprite {
 	moving = false;
@@ -13,7 +13,7 @@ export class Player extends Sprite {
 	target: null | Enemy = null;
 	width = PLAYER_WEITH;
 	height = PLAYER_HEIGHT;
-	constructor(props: models.IProps) {
+	constructor(props: IProps) {
 		super({ ...props });
 	}
 	draw() {

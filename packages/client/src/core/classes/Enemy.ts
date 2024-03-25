@@ -1,6 +1,6 @@
 import { Sprite } from './Sprite';
-import * as models from '../models/models';
 import { ENEMY_HEALTH, ENEMY_HEIGHT, ENEMY_WEITH } from '../../constants/core.config';
+import { IEnemy } from '../models/models';
 
 export class Enemy extends Sprite {
 	pointIndex = 0;
@@ -10,7 +10,7 @@ export class Enemy extends Sprite {
 	width = ENEMY_WEITH;
 	height = ENEMY_HEIGHT;
 	radius = this.height;
-	constructor(props: models.IEnemy) {
+	constructor(props: IEnemy) {
 		super({ ...props });
 		this.path = props.path;
 	}

@@ -5,7 +5,7 @@ export class Sprite {
 	position: models.ObjectNum;
 	width = 0;
 	height = 0;
-	center: models.CoordsType;
+	center: models.CordsType;
 	velocity: number;
 	constructor(props: models.IProps) {
 		this.c = props.canvas;

@@ -1,12 +1,12 @@
 import { HOME_HEIGHT, HOME_WEITH } from '../../constants/core.config';
-import * as models from '../models/models';
+import { IDefaultProps } from '../models/models';
 
 export class Home {
 	c;
 	position;
 	width = HOME_WEITH;
 	height = HOME_HEIGHT;
-	constructor(props: models.IHome) {
+	constructor(props: IDefaultProps) {
 		this.c = props.canvas;
 		this.position = props.position;
 	}

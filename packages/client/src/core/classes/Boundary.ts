@@ -1,13 +1,13 @@
 import { TILE_SIZE } from '../../constants/core.config';
-import * as models from '../models/models';
+import { CordsType, IDefaultProps } from '../models/models';
 
 export class Boundary {
 	c: CanvasRenderingContext2D;
 	width = TILE_SIZE;
 	height = TILE_SIZE;
 	radius = this.width / 2;
-	position: models.CoordsType;
-	constructor(props: models.IBoundary) {
+	position: CordsType;
+	constructor(props: IDefaultProps) {
 		this.c = props.canvas;
 		this.position = props.position;
 		this.position.x = props.position.x * TILE_SIZE;

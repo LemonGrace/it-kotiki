@@ -6,7 +6,12 @@ import { Boundary } from './classes/Boundary';
 import { Player } from './classes/Player';
 import { Home } from './classes/Home';
 import { Enemy } from './classes/Enemy';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, TILE_SIZE } from '../constants/core.config';
+import { TowerPlace } from './classes/TowerPlace';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, START_COUNT_TOWERS, TILE_SIZE, TILE_WEITH } from '../constants/core.config';
+import { Tower } from './classes/Tower';
+import { findPath } from './findPath';
+import { mouseCordsCheck } from './utils/mouseCordsCheck';
+import { randomInt } from './utils/randomInt';
 
 export const Core = () => {
 	const CANVAS_NODE: HTMLCanvasElement = document.querySelector('canvas') as HTMLCanvasElement;
@@ -17,7 +22,14 @@ export const Core = () => {
 	const collisions: number[] = map;
 	const collisionMap: number[][] = [];
 	const boundarys: Boundary[] = [];
+	const towerPlaces: TowerPlace[] = [];
+	const towers: Tower[] = [];
 	const homePlace = [7, 3];
+
+	let activeTile: null | TowerPlace;
+	let activeHome = false;
+	let activeHomeClick = false;
+	let countTowers = START_COUNT_TOWERS;
 	let player: Player;
 	let home: Home;
 	let homeHealth = 100;
@@ -37,6 +49,11 @@ export const Core = () => {
 		d: {
 			pressed: false,
 		},
+	};
+
+	const mouse: models.CordsType = {
+		x: 0,
+		y: 0,
 	};
 
 	const startGame = () => {
@@ -66,6 +83,61 @@ export const Core = () => {
 		animate();
 		spawnEnemy(5);
 
+		CANVAS_NODE.addEventListener('mousemove', event => {
+			if (event.target !== null) {
+				const target = event.target as HTMLCanvasElement;
+				mouse.x = event.clientX - target.offsetLeft;
+				mouse.y = event.clientY - target.offsetTop;
+			}
+
+			activeTile = null;
+			activeHome = false;
+
+			if (activeHomeClick) {
+				for (let i = 0; i < towerPlaces.length; i++) {
+					const tile = towerPlaces[i];
+					if (mouseCordsCheck(mouse, tile.position)) {
+						activeTile = tile;
+						break;
+					}
+				}
+			}
+
+			if (!activeHomeClick) {
+				activeHome = false;
+			}
+
+			if (mouseCordsCheck(mouse, home.position)) {
+				activeHome = true;
+			}
+		});
+
+		CANVAS_NODE.addEventListener('click', () => {
+			if (activeHome && countTowers > 0) {
+				activeHomeClick = !activeHomeClick;
+			}
+
+			if (activeTile && countTowers > 0) {
+				createTower(activeTile);
+				countTowers -= 1;
+				enemies.forEach(enemy => {
+					const newPath = findPath(
+						collisions,
+						[Math.round(enemy.center.y / TILE_SIZE), Math.round(enemy.center.x / TILE_SIZE)],
+						homePlace,
+					);
+					if (newPath.length > 0 && activeTile && enemy.center.x > activeTile.position.x + activeTile.width) {
+						enemy.pointIndex = 2;
+						enemy.path = newPath;
+					}
+				});
+			}
+
+			if (countTowers <= 0) {
+				activeHomeClick = false;
+			}
+		});
+
 		addEventKeys('keydown', keys, true);
 		addEventKeys('keyup', keys, false);
 	};
@@ -88,9 +160,62 @@ export const Core = () => {
 						}),
 					);
 				}
+				if (el === 2) {
+					boundarys.push(
+						new Boundary({
+							canvas: CTX,
+							position: {
+								x: k,
+								y: i,
+							},
+						}),
+					);
+				}
+				if (el === 0 && k !== 1 && k !== 2 && k !== 3 && k !== 21 && k !== 20) {
+					towerPlaces.push(
+						new TowerPlace({
+							canvas: CTX,
+							position: {
+								x: k,
+								y: i,
+							},
+						}),
+					);
+				}
 			});
 		});
 	};
+
+	function createTower(activeTile: TowerPlace) {
+		collisions.splice(
+			(activeTile.position.y / TILE_SIZE) * TILE_WEITH + activeTile.position.x / TILE_SIZE + 1,
+			1,
+			1,
+		);
+		boundarys.push(
+			new Boundary({
+				canvas: CTX,
+				position: {
+					x: activeTile.position.x / TILE_SIZE,
+					y: activeTile.position.y / TILE_SIZE,
+				},
+			}),
+		);
+		boundarys.forEach(boundary => {
+			boundary.draw();
+		});
+		towers.push(
+			new Tower({
+				canvas: CTX,
+				position: {
+					x: activeTile.position.x,
+					y: activeTile.position.y,
+				},
+				velocity: 0,
+				target: null,
+			}),
+		);
+	}
 
 	function spawnEnemy(quantity: number) {
 		for (let i = 1; i < quantity + 1; i++) {
@@ -103,12 +228,7 @@ export const Core = () => {
 					},
 					velocity: 2,
 					target: null,
-					path: [
-						{
-							x: homePlace[1] * TILE_SIZE,
-							y: homePlace[0] * TILE_SIZE,
-						},
-					],
+					path: findPath(collisions, [randomInt(4, 7), 22], homePlace),
 				}),
 			);
 		}
@@ -130,7 +250,7 @@ export const Core = () => {
 		return stop;
 	}
 
-	function killCheck(gunner: Player) {
+	function killCheck(gunner: Player | Tower) {
 		const validEnemys = enemies.filter(enemy => {
 			const distance = distanceHypot(enemy.center, gunner.center);
 			return distance < enemy.radius + gunner.attackRange;
@@ -171,6 +291,12 @@ export const Core = () => {
 		player.update();
 		home.draw();
 
+		if (activeHomeClick) {
+			towerPlaces.forEach(place => {
+				place.update(mouse);
+			});
+		}
+
 		for (let i = enemies.length - 1; i >= 0; i--) {
 			const enemy = enemies[i];
 			enemy.update();
@@ -203,6 +329,11 @@ export const Core = () => {
 			player.center.y += verticalDirection * player.velocity;
 			player.position.y += verticalDirection * player.velocity;
 		}
+
+		towers.forEach(tower => {
+			tower.update();
+			killCheck(tower);
+		});
 
 		if (homeHealth > 0) window.requestAnimationFrame(animate);
 	}
