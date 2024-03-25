@@ -18,10 +18,10 @@ export const Layout: FC = () => {
 	};
 	return (
 		<ConfigProvider theme={ANTD_CONFIG}>
-			<ALayout style={{ height: '100vh' }}>
+			<ALayout style={{ height: '100%' }}>
 				{contextHolder}
 				{!isSignPage && <Header />}
-				<ALayout.Content style={{ overflowY: 'scroll' }}>
+				<ALayout.Content>
 					<Outlet context={{ openNotification }} />
 				</ALayout.Content>
 				<ALayout.Footer style={{ textAlign: 'center' }}>
