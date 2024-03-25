@@ -13,6 +13,7 @@ export const ANTD_CONFIG = {
 		fontSizeHeading1: 24,
 		fontSizeHeading2: 16,
 		linkDecoration: 'underline',
+		fontSizeHeading1: 30,
 	},
 	components: {
 		Layout: {
@@ -36,6 +37,7 @@ export const ANTD_CONFIG = {
 			defaultActiveColor: LIGHT_OCEAN,
 			borderRadius: 12,
 			fontWeight: 600,
+			paddingInlineLG: 27,
 		},
 
 		/**

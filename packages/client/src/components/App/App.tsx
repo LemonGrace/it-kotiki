@@ -10,6 +10,7 @@ import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
 import { NotFoundPage } from '../../pages/ErrorPage/NotFoundPage';
 import { ServerErrorPage } from '../../pages/ErrorPage/ServerErrorPage';
 import { LeaderboardPage } from '../../pages/LeaderboardPage/LeaderboardPage';
+import { StartGamePage } from '../../pages/Game/StartGamePage';
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 			<Route path={EPATH.MAIN} element={<Layout />}>
 				<Route element={<ProtectedRoute />}>
 					<Route index element={<Template />} />
+					<Route path={EPATH.START_GAME} element={<StartGamePage />} />
 					<Route path={EPATH.PROFILE} element={<ProfilePage />} />
 					<Route path={EPATH.LEADER_BOARD} element={<LeaderboardPage />} />
 					<Route path={EPATH.FORUM} element={<ForumPage />} />
