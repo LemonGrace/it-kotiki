@@ -34,20 +34,41 @@ module.exports = {
 		'import/no-duplicates': 'off',
 		'no-tabs': 0,
 		'max-len': [
-			'error', { code: 120,
+			'error', {
+				code: 120,
 				tabWidth: 4,
-				ignoreComments: true },
+				ignoreComments: true, 
+			},
 		],
 		'function-call-argument-newline': ['error', 'consistent'],
 		'array-element-newline': ['error', 'consistent'],
 		camelcase: [
-			'error', { properties: 'never',
-				ignoreDestructuring: true },
+			'error', {
+				properties: 'never',
+				ignoreDestructuring: true, 
+			},
 		],
 		'array-bracket-newline': ['error', { multiline: true }],
 		'array-bracket-spacing': ['error', 'never'],
 		'object-curly-spacing': ['error', 'always'],
-		'object-curly-newline': ['error', { consistent: true }],
+		'object-curly-newline': [
+			'error',
+			{
+				'ObjectExpression': {
+					'consistent': true,
+					'multiline': true, 
+				},
+				'ObjectPattern': {
+					'consistent': true,
+					'multiline': true, 
+				},
+				'ImportDeclaration': 'never',
+				'ExportDeclaration': {
+					'multiline': true,
+					'minProperties': 3, 
+				},
+			},
+		],
 		'object-property-newline': ['error', { allowMultiplePropertiesPerLine: false }],
 		'comma-dangle': ['error', 'always-multiline'],
 		'no-multiple-empty-lines': ['error', { max: 2 }],
