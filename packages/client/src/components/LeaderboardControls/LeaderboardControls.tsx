@@ -61,12 +61,6 @@ const ControlsCheckbox = styled(Checkbox)`
 			background-color: ${palette.DEEP_OCEAN};
 			border-color: ${palette.DEEP_OCEAN};
 		}
-		/* .ant-checkbox-checked {
-      .ant-checkbox-inner {
-        background-color: ${palette.DEEP_OCEAN};
-        border-color: ${palette.DEEP_OCEAN};
-      }
-    } */
 	}
 `;
 

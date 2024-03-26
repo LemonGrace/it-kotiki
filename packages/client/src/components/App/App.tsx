@@ -9,6 +9,7 @@ import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute';
 import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
 import { NotFoundPage } from '../../pages/ErrorPage/NotFoundPage';
 import { ServerErrorPage } from '../../pages/ErrorPage/ServerErrorPage';
+import { LeaderboardPage } from '../../pages/LeaderboardPage/LeaderboardPage';
 
 function App() {
 	return (
@@ -17,7 +18,7 @@ function App() {
 				<Route element={<ProtectedRoute />}>
 					<Route index element={<Template />} />
 					<Route path={EPATH.PROFILE} element={<ProfilePage />} />
-					<Route path={EPATH.LEADER_BOARD} element={<Template />} />
+					<Route path={EPATH.LEADER_BOARD} element={<LeaderboardPage />} />
 					<Route path={EPATH.FORUM} element={<ForumPage />} />
 				</Route>
 				<Route path={EPATH.ABOUT} element={<Template />} />

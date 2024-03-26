@@ -6,6 +6,11 @@ import { IForumTopic } from './models/models';
 
 const { Title, Text } = Typography;
 
+const ForumCard = styled(Card)`
+	border: 1px solid ${palette.DEEP_OCEAN};
+	border-radius: 24px;
+`;
+
 const ForumCardAvatar = styled(Avatar)`
 	margin: 0;
 	width: 44px;
@@ -31,14 +36,14 @@ const ResponsesNumber = styled(Text)`
 `;
 
 const ForumTopic: React.FC<Omit<IForumTopic, 'id'>> = ({ avatarPath, topicTitle, responsesNumber }) => (
-	<Card>
+	<ForumCard>
 		<ForumCardAvatar src={avatarPath} />
 		<ForumCardTitle level={2}>{topicTitle}</ForumCardTitle>
 		<ForumCardResponses>
 			<Text>Ответов:</Text>
 			<ResponsesNumber>{responsesNumber}</ResponsesNumber>
 		</ForumCardResponses>
-	</Card>
+	</ForumCard>
 );
 
 export default ForumTopic;
