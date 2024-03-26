@@ -19,9 +19,9 @@ function App() {
 					<Route path={EPATH.PROFILE} element={<ProfilePage />} />
 					<Route path={EPATH.LEADER_BOARD} element={<Template />} />
 					<Route path={EPATH.FORUM} element={<ForumPage />} />
+					<Route path={EPATH.GAME} element={<Game />} />
 				</Route>
 				<Route path={EPATH.ABOUT} element={<Template />} />
-				<Route path={EPATH.GAME} element={<Game />} />
 				<Route path={EPATH.SIGN_UP} element={<SignPage type={EPAGE_TYPE.SIGNUP} />} />
 				<Route path={EPATH.SIGN_IN} element={<SignPage type={EPAGE_TYPE.SIGNIN} />} />
 			</Route>
