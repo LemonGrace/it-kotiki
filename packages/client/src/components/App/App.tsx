@@ -10,7 +10,7 @@ import { ProfilePage } from '../../pages/ProfilePage/ProfilePage';
 import { NotFoundPage } from '../../pages/ErrorPage/NotFoundPage';
 import { ServerErrorPage } from '../../pages/ErrorPage/ServerErrorPage';
 import { LeaderboardPage } from '../../pages/LeaderboardPage/LeaderboardPage';
-import { StartGamePage } from '../../pages/Game/StartGamePage';
+import { StartGamePage } from '../../pages/Game/StartGamePage/StartGamePage';
 
 function App() {
 	return (
