@@ -21,9 +21,7 @@ export class TowerPlace {
 
 	update(mouse: CordsType) {
 		this.draw();
-		// eslint-disable-next-line no-console
-		console.log(mouseCordsCheck(mouse, this.position));
-		if (mouseCordsCheck(mouse, this.position)) {
+		if (mouseCordsCheck(mouse, this.position, this.width, this.height)) {
 			this.color = 'rgb(157, 193, 151, 0.5)';
 		} else this.color = 'rgb(186, 170, 255, 0.2)';
 	}

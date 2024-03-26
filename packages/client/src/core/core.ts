@@ -12,6 +12,7 @@ import { Tower } from './classes/Tower';
 import { findPath } from './findPath';
 import { mouseCordsCheck } from './utils/mouseCordsCheck';
 import { randomInt } from './utils/randomInt';
+import { IimgSprite } from './models/models';
 
 export const Core = () => {
 	const CANVAS_NODE: HTMLCanvasElement = document.querySelector('canvas') as HTMLCanvasElement;
@@ -21,10 +22,12 @@ export const Core = () => {
 
 	const collisions: number[] = map;
 	const collisionMap: number[][] = [];
-	const boudaries: Boundary[] = [];
+	const boundaries: Boundary[] = [];
 	const towerPlaces: TowerPlace[] = [];
 	const towers: Tower[] = [];
 	const homePlace = [7, 3];
+	const imgSprite: IimgSprite = {};
+	const imgPromises: Promise<HTMLImageElement>[] = [];
 
 	let activeTile: null | TowerPlace;
 	let activeHome = false;
@@ -56,90 +59,139 @@ export const Core = () => {
 		y: 0,
 	};
 
+	const createImage = (name: string, src: string) => {
+		const img = new Image();
+		img.src = src;
+		imgSprite[name] = img;
+		imgPromises.push(
+			new Promise<any>((resolve, reject) => {
+				img.onload = () => resolve(img);
+				img.onerror = () => reject(new Error('Ошибка загрузки изображения'));
+				img.src = src;
+			}),
+		);
+	};
+
+	createImage('background', 'background.png');
+	createImage('playerImageRigth', 'Run_right.png');
+	createImage('playerImageLeft', 'Run_left.png');
+	createImage('enemyRock', 'enemy_rock_run.png');
+	createImage('enemyBat', 'bat.png');
+	createImage('tower', 'tower.png');
+	createImage('home', 'home.png');
+	createImage('homeAfter', 'home_after.png');
+
 	const startGame = () => {
+		CTX.imageSmoothingEnabled = false;
 		homeHealth = 100;
 		enemies = [];
 
 		buildCollision();
 
-		home = new Home({
-			canvas: CTX,
-			position: {
-				x: TILE_SIZE * homePlace[1],
-				y: TILE_SIZE * homePlace[0],
-			},
-		});
+		Promise.all(imgPromises).then(() => {
+			home = new Home({
+				canvas: CTX,
+				position: {
+					x: TILE_SIZE * 2,
+					y: TILE_SIZE * 5,
+				},
+				image: imgSprite.home,
+				sprites: {
+					before: imgSprite.home,
+					after: imgSprite.homeAfter,
+				},
+			});
 
-		player = new Player({
-			canvas: CTX,
-			position: {
-				x: CANVAS_WIDTH / 2,
-				y: CANVAS_HEIGHT / 2,
-			},
-			velocity: 3,
-			target: null,
-		});
+			player = new Player({
+				canvas: CTX,
+				position: {
+					x: CANVAS_WIDTH / 2,
+					y: CANVAS_HEIGHT / 2,
+				},
+				image: imgSprite.playerImageRigth,
+				size: 2,
+				velocity: 3,
+				frames: {
+					max: 12,
+				},
+				sprites: {
+					left: imgSprite.playerImageLeft,
+					rigth: imgSprite.playerImageRigth,
+				},
+				target: null,
+			});
 
-		animate();
-		spawnEnemy(5);
+			boundaries.forEach(boundary => {
+				boundary.draw();
+			});
 
-		CANVAS_NODE.addEventListener('mousemove', event => {
-			if (event.target !== null) {
-				const target = event.target as HTMLCanvasElement;
-				mouse.x = event.clientX - target.offsetLeft;
-				mouse.y = event.clientY - target.offsetTop;
-			}
+			animate();
+			spawnEnemy(5);
 
-			activeTile = null;
-			activeHome = false;
+			CANVAS_NODE.addEventListener('mousemove', event => {
+				if (event.target !== null) {
+					const target = event.target as HTMLCanvasElement;
+					mouse.x = event.clientX - target.offsetLeft;
+					mouse.y = event.clientY - target.offsetTop;
+				}
 
-			if (activeHomeClick) {
-				for (let i = 0; i < towerPlaces.length; i++) {
-					const tile = towerPlaces[i];
-					if (mouseCordsCheck(mouse, tile.position)) {
-						activeTile = tile;
-						break;
+				activeTile = null;
+				activeHome = false;
+
+				if (activeHomeClick) {
+					for (let i = 0; i < towerPlaces.length; i++) {
+						const tile = towerPlaces[i];
+						if (mouseCordsCheck(mouse, tile.position, tile.width, tile.height)) {
+							activeTile = tile;
+							break;
+						}
 					}
 				}
-			}
 
-			if (!activeHomeClick) {
-				activeHome = false;
-			}
-
-			if (mouseCordsCheck(mouse, home.position)) {
-				activeHome = true;
-			}
-		});
-
-		CANVAS_NODE.addEventListener('click', () => {
-			if (activeHome && countTowers > 0) {
-				activeHomeClick = !activeHomeClick;
-			}
-
-			if (activeTile && countTowers > 0) {
-				createTower(activeTile);
-				countTowers -= 1;
-				enemies.forEach(enemy => {
-					const newPath = findPath(
-						collisions,
-						[Math.round(enemy.center.y / TILE_SIZE), Math.round(enemy.center.x / TILE_SIZE)],
-						homePlace,
-					);
-					if (newPath.length > 0 && activeTile && enemy.center.x > activeTile.position.x + activeTile.width) {
-						enemy.pointIndex = 2;
-						enemy.path = newPath;
+				if (mouseCordsCheck(mouse, home.position, home.width, home.height)) {
+					home.image = home.sprites.after;
+					activeHome = true;
+				} else {
+					if (!activeHomeClick) {
+						home.image = home.sprites.before;
+						activeHome = false;
 					}
-				});
-			}
+				}
+			});
 
-			if (countTowers <= 0) {
-				activeHomeClick = false;
-			}
+			CANVAS_NODE.addEventListener('click', () => {
+				if (activeHome && countTowers > 0) {
+					activeHomeClick = !activeHomeClick;
+				}
+
+				if (activeTile && countTowers > 0) {
+					createTower(activeTile);
+					countTowers -= 1;
+					enemies.forEach(enemy => {
+						const newPath = findPath(
+							collisions,
+							[Math.round(enemy.center.y / TILE_SIZE), Math.round(enemy.center.x / TILE_SIZE)],
+							homePlace,
+						);
+						if (
+							newPath.length > 0 &&
+							activeTile &&
+							enemy.center.x > activeTile.position.x + activeTile.width
+						) {
+							enemy.pointIndex = 2;
+							enemy.path = newPath;
+						}
+					});
+				}
+
+				if (countTowers <= 0) {
+					activeHomeClick = false;
+				}
+			});
+
+			addEventKeys('keydown', keys, true);
+			addEventKeys('keyup', keys, false);
 		});
-
-		addEventKeys('keydown', keys, true);
-		addEventKeys('keyup', keys, false);
 	};
 
 	const buildCollision = () => {
@@ -150,7 +202,7 @@ export const Core = () => {
 		collisionMap.forEach((row, i) => {
 			row.forEach((el, k) => {
 				if (el === 1 || el === 2) {
-					boudaries.push(
+					boundaries.push(
 						new Boundary({
 							canvas: CTX,
 							position: {
@@ -161,7 +213,7 @@ export const Core = () => {
 					);
 				}
 				if (el === 2) {
-					boudaries.push(
+					boundaries.push(
 						new Boundary({
 							canvas: CTX,
 							position: {
@@ -192,7 +244,7 @@ export const Core = () => {
 			1,
 			1,
 		);
-		boudaries.push(
+		boundaries.push(
 			new Boundary({
 				canvas: CTX,
 				position: {
@@ -201,43 +253,76 @@ export const Core = () => {
 				},
 			}),
 		);
-		boudaries.forEach(boundary => {
+		boundaries.forEach(boundary => {
 			boundary.draw();
 		});
 		towers.push(
 			new Tower({
 				canvas: CTX,
+				image: imgSprite.tower,
 				position: {
 					x: activeTile.position.x,
 					y: activeTile.position.y,
 				},
 				velocity: 0,
 				target: null,
+				size: 0,
+				sprites: {},
+				frames: { max: 10 },
 			}),
 		);
 	}
 
 	function spawnEnemy(quantity: number) {
 		for (let i = 1; i < quantity + 1; i++) {
-			enemies.push(
-				new Enemy({
-					canvas: CTX,
-					position: {
-						x: CANVAS_WIDTH + 200,
-						y: 100 + (i * TILE_SIZE + 100),
-					},
-					velocity: 2,
-					target: null,
-					path: findPath(collisions, [randomInt(4, 7), 22], homePlace),
-				}),
-			);
+			if (randomInt(0, 1) === 1) {
+				enemies.push(
+					new Enemy({
+						canvas: CTX,
+						position: {
+							x: CANVAS_WIDTH + 200,
+							y: 100 + (i * TILE_SIZE + 100),
+						},
+						image: imgSprite.enemyBat,
+						size: 2,
+						velocity: 2,
+						frames: {
+							max: 7,
+						},
+						sprites: {},
+						target: null,
+						path: findPath(collisions, [randomInt(4, 7), 22], homePlace),
+					}),
+				);
+			} else {
+				enemies.push(
+					new Enemy({
+						canvas: CTX,
+						position: {
+							x: CANVAS_WIDTH + 200,
+							y: CANVAS_HEIGHT / 2 + i * TILE_SIZE,
+						},
+						image: imgSprite.enemyRock,
+						size: 2,
+						velocity: 2,
+						target: null,
+						sprites: {},
+						frames: {
+							max: 14,
+						},
+						path: findPath(collisions, [randomInt(4, 7), 22], homePlace),
+					}),
+				);
+			}
 		}
 	}
 
 	function moving(x: number, y: number) {
+		if (x > 0) player.image = player.sprites.left;
+		if (x < 0) player.image = player.sprites.rigth;
 		player.moving = true;
 		let stop = false;
-		boudaries.forEach(boundary => {
+		boundaries.forEach(boundary => {
 			if (
 				player.position.x - x + player.width >= boundary.position.x &&
 				player.position.x - x <= boundary.position.x + boundary.width &&
@@ -285,9 +370,8 @@ export const Core = () => {
 
 	function animate() {
 		CTX.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-		boudaries.forEach(boundary => {
-			boundary.draw();
-		});
+		CTX.drawImage(imgSprite.background, 0, 0);
+
 		player.update();
 		home.draw();
 
@@ -317,17 +401,24 @@ export const Core = () => {
 			spawnEnemy(Math.round(killedEnemies / 2));
 		}
 
+		if (player.frames.val === 0) {
+			player.moving = false;
+		}
+
 		const verticalDirection = keys.w.pressed ? -1 : keys.s.pressed ? 1 : 0;
 		const horizontalDirection = keys.a.pressed ? 1 : keys.d.pressed ? -1 : 0;
 
-		if (!moving(horizontalDirection * 5, 0)) {
-			player.center.x -= horizontalDirection * player.velocity;
-			player.position.x -= horizontalDirection * player.velocity;
+		if (keys.a.pressed || keys.d.pressed) {
+			if (!moving(horizontalDirection * 5, 0)) {
+				player.center.x -= horizontalDirection * player.velocity;
+				player.position.x -= horizontalDirection * player.velocity;
+			}
 		}
-
-		if (!moving(0, verticalDirection * 5)) {
-			player.center.y += verticalDirection * player.velocity;
-			player.position.y += verticalDirection * player.velocity;
+		if (keys.w.pressed || keys.s.pressed) {
+			if (!moving(0, verticalDirection * 5)) {
+				player.center.y += verticalDirection * player.velocity;
+				player.position.y += verticalDirection * player.velocity;
+			}
 		}
 
 		towers.forEach(tower => {

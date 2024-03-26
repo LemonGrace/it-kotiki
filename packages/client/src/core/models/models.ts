@@ -17,14 +17,22 @@ export type CordsType = {
 	y: number;
 };
 
+export interface IimgSprite {
+	[key: string]: HTMLImageElement;
+}
+
 export interface IDefaultProps {
 	canvas: CanvasRenderingContext2D;
 	position: CordsType;
 }
 
 export interface IProps extends IDefaultProps {
+	image: HTMLImageElement;
+	size: number;
 	velocity: number;
 	target: null | Enemy;
+	sprites: ObjectImg;
+	frames: ObjectNum;
 }
 
 export interface IEnemy extends IProps {
@@ -33,6 +41,11 @@ export interface IEnemy extends IProps {
 
 export interface IProjectile extends IDefaultProps {
 	target: Enemy;
+}
+
+export interface IHome extends IDefaultProps {
+	image: HTMLImageElement;
+	sprites: ObjectImg;
 }
 
 export interface ValidEnemyType {

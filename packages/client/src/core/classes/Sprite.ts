@@ -3,12 +3,20 @@ import * as models from '../models/models';
 export class Sprite {
 	c: CanvasRenderingContext2D;
 	position: models.ObjectNum;
-	width = 0;
-	height = 0;
+	image: HTMLImageElement;
+	sprites: models.ObjectImg;
+	frames: models.ObjectNum;
+	width;
+	height;
 	center: models.CordsType;
 	velocity: number;
 	constructor(props: models.IProps) {
 		this.c = props.canvas;
+		this.image = props.image;
+		this.sprites = props.sprites;
+		this.frames = props.frames;
+		this.width = this.image.width / this.frames.max;
+		this.height = this.image.height;
 		this.position = props.position;
 		this.velocity = props.velocity;
 		this.center = {
