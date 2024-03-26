@@ -7,6 +7,7 @@ import { LeaderboardItem } from '../../components/LeaderboardItem/LeaderboardIte
 import { ILeaderboardItem } from '../../components/LeaderboardItem/models/models';
 import { LeaderboardControls } from '../../components/LeaderboardControls/LeaderboardControls';
 import { FieldData } from '../../components/LeaderboardControls/models/models';
+import { objectSorter } from '../../utils/helpers';
 
 const { Title } = Typography;
 
@@ -61,21 +62,10 @@ const PageTitle = styled(Title)`
 	}
 `;
 
-const objectSorter = (data: ILeaderboardItem[], value: string, order: string) => {
-	if (!value) return data;
-	return data?.sort((a, b) => {
-		if (order) {
-			return a[value] < b[value] ? 1 : -1;
-		} else {
-			return a[value] > b[value] ? 1 : -1;
-		}
-	});
-};
-
 export const LeaderboardPage: React.FC = () => {
 	const [isControlsOpen, setIsControlsOpen] = useState(false);
-	const [sortedData, setSortedData] = useState(mockLeaderobardData);
-	const [data, setData] = useState(mockLeaderobardData);
+	const [sortedData, setSortedData] = useState<Record<string, string | number>[]>(mockLeaderobardData);
+	const [data, setData] = useState<Record<string, string | number>[]>(mockLeaderobardData);
 
 	const toggleControls = () => setIsControlsOpen(!isControlsOpen);
 
