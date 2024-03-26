@@ -1,10 +1,8 @@
-import { FC, useMemo, useState } from 'react';
-import { Button, Flex, Statistic, Typography, Card } from 'antd';
-import styled from 'styled-components';
-import { DEEP_OCEAN, DEEP_PURPLE, LIGHT_PURPLE, ORANGE } from '../../constants/color';
+import React, { FC, useMemo, useState } from 'react';
+import { Button, Flex } from 'antd';
+import { Countdown, HintCard, HintCardWrapper, StartGameTitle } from './StartGamePage.style';
 
-const { Title } = Typography;
-
+const TIME_REMAIN = Date.now() + 1.5 * 60000;
 const CARD_HINT = [
 	{
 		id: 1,
@@ -22,20 +20,20 @@ const CARD_HINT = [
 export const StartGamePage: FC = () => {
 	const [isDisabled, setIsDisabled] = useState(true);
 	const $countDown = useMemo(() => {
-		return <Countdown format="mm:ss" value={Date.now() + 1.5 * 60000} onFinish={() => setIsDisabled(false)} />;
+		return <Countdown format="mm:ss" value={TIME_REMAIN} onFinish={() => setIsDisabled(false)} />;
 	}, []);
 
 	return (
 		<Flex vertical align="center" justify="center">
 			<StartGameTitle>ИГРА НАЧНЕТСЯ ЧЕРЕЗ:</StartGameTitle>
 			{$countDown}
-			<CardWrapper>
+			<HintCardWrapper>
 				{CARD_HINT.map(({ id, text }) => (
 					<HintCard key={id} title={`Подсказка #${id}`}>
 						{text}
 					</HintCard>
 				))}
-			</CardWrapper>
+			</HintCardWrapper>
 			<Button
 				disabled={isDisabled}
 				size="large"
@@ -47,43 +45,3 @@ export const StartGamePage: FC = () => {
 		</Flex>
 	);
 };
-
-const StartGameTitle = styled(Title)`
-	&.ant-typography {
-		color: ${DEEP_PURPLE};
-		margin: 44px 0 12px;
-	}
-`;
-const Countdown = styled(Statistic.Countdown)`
-	> .ant-statistic-content {
-		font-size: 46px;
-		color: ${DEEP_PURPLE};
-		text-shadow: 0 4px 4px ${ORANGE};
-	}
-`;
-
-const CardWrapper = styled.div`
-	margin: 60px 0 60px;
-	display: flex;
-	flex-direction: row;
-	gap: 24px;
-`;
-
-const HintCard = styled(Card)`
-	background: ${LIGHT_PURPLE};
-	border: 2px solid ${DEEP_OCEAN};
-	color: ${DEEP_PURPLE};
-	padding: 24px;
-
-	> .ant-card-head {
-		border: none;
-		margin-bottom: 8px;
-		padding: 0;
-		min-height: 28px;
-		color: ${DEEP_PURPLE};
-	}
-
-	> .ant-card-body {
-		padding: 0;
-	}
-`;

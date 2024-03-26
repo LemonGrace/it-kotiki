@@ -10,10 +10,9 @@ export const ANTD_CONFIG = {
 		colorText: COLD_GREY,
 		colorLink: DEEP_PURPLE,
 		colorLinkHover: ORANGE,
-		fontSizeHeading1: 24,
+		fontSizeHeading1: 30,
 		fontSizeHeading2: 16,
 		linkDecoration: 'underline',
-		fontSizeHeading1: 30,
 	},
 	components: {
 		Layout: {
