@@ -7,7 +7,7 @@ import { Player } from './classes/Player';
 import { Home } from './classes/Home';
 import { Enemy } from './classes/Enemy';
 import { TowerPlace } from './classes/TowerPlace';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, START_COUNT_TOWERS, TILE_SIZE, TILE_WEITH } from '../constants/core.config';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, START_COUNT_TOWERS, TILE_SIZE, TILE_WIDTH } from '../constants/core.config';
 import { Tower } from './classes/Tower';
 import { findPath } from './findPath';
 import { mouseCordsCheck } from './utils/mouseCordsCheck';
@@ -21,7 +21,7 @@ export const Core = () => {
 
 	const collisions: number[] = map;
 	const collisionMap: number[][] = [];
-	const boundarys: Boundary[] = [];
+	const boudaries: Boundary[] = [];
 	const towerPlaces: TowerPlace[] = [];
 	const towers: Tower[] = [];
 	const homePlace = [7, 3];
@@ -60,7 +60,7 @@ export const Core = () => {
 		homeHealth = 100;
 		enemies = [];
 
-		buildCallisian();
+		buildCollision();
 
 		home = new Home({
 			canvas: CTX,
@@ -142,7 +142,7 @@ export const Core = () => {
 		addEventKeys('keyup', keys, false);
 	};
 
-	const buildCallisian = () => {
+	const buildCollision = () => {
 		for (let i = 0; i < collisions.length; i += CANVAS_WIDTH / TILE_SIZE) {
 			collisionMap.push(collisions.slice(i, CANVAS_WIDTH / TILE_SIZE + i));
 		}
@@ -150,7 +150,7 @@ export const Core = () => {
 		collisionMap.forEach((row, i) => {
 			row.forEach((el, k) => {
 				if (el === 1 || el === 2) {
-					boundarys.push(
+					boudaries.push(
 						new Boundary({
 							canvas: CTX,
 							position: {
@@ -161,7 +161,7 @@ export const Core = () => {
 					);
 				}
 				if (el === 2) {
-					boundarys.push(
+					boudaries.push(
 						new Boundary({
 							canvas: CTX,
 							position: {
@@ -188,11 +188,11 @@ export const Core = () => {
 
 	function createTower(activeTile: TowerPlace) {
 		collisions.splice(
-			(activeTile.position.y / TILE_SIZE) * TILE_WEITH + activeTile.position.x / TILE_SIZE + 1,
+			(activeTile.position.y / TILE_SIZE) * TILE_WIDTH + activeTile.position.x / TILE_SIZE + 1,
 			1,
 			1,
 		);
-		boundarys.push(
+		boudaries.push(
 			new Boundary({
 				canvas: CTX,
 				position: {
@@ -201,7 +201,7 @@ export const Core = () => {
 				},
 			}),
 		);
-		boundarys.forEach(boundary => {
+		boudaries.forEach(boundary => {
 			boundary.draw();
 		});
 		towers.push(
@@ -237,7 +237,7 @@ export const Core = () => {
 	function moving(x: number, y: number) {
 		player.moving = true;
 		let stop = false;
-		boundarys.forEach(boundary => {
+		boudaries.forEach(boundary => {
 			if (
 				player.position.x - x + player.width >= boundary.position.x &&
 				player.position.x - x <= boundary.position.x + boundary.width &&
@@ -285,7 +285,7 @@ export const Core = () => {
 
 	function animate() {
 		CTX.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-		boundarys.forEach(boundary => {
+		boudaries.forEach(boundary => {
 			boundary.draw();
 		});
 		player.update();

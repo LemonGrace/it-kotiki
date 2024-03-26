@@ -1,11 +1,11 @@
-import { TILE_SIZE, TOWER_PLACE_HEIGHT, TOWER_PLACE_WEITH } from '../../constants/core.config';
+import { TILE_SIZE, TOWER_PLACE_HEIGHT, TOWER_PLACE_WIDTH } from '../../constants/core.config';
 import { CordsType, IDefaultProps } from '../models/models';
 import { mouseCordsCheck } from '../utils/mouseCordsCheck';
 
 export class TowerPlace {
 	c;
 	position;
-	width = TOWER_PLACE_WEITH;
+	width = TOWER_PLACE_WIDTH;
 	height = TOWER_PLACE_HEIGHT;
 	color = 'rgb(186, 170, 255, 0.2)';
 	constructor(props: IDefaultProps) {

@@ -1,4 +1,4 @@
-import { TOWER_ATTACKRANGE, TOWER_HEIGHT, TOWER_WEITH } from '../../constants/core.config';
+import { TOWER_ATTACKRANGE, TOWER_HEIGHT, TOWER_WIDTH } from '../../constants/core.config';
 import { IProps } from '../models/models';
 import { Enemy } from './Enemy';
 import { Projectile } from './Projectile';
@@ -8,7 +8,7 @@ export class Tower extends Sprite {
 	attackRange = TOWER_ATTACKRANGE;
 	target: null | Enemy = null;
 	projectile: Projectile[] = [];
-	width = TOWER_WEITH;
+	width = TOWER_WIDTH;
 	height = TOWER_HEIGHT;
 	center = {
 		x: this.position.x + this.width / 2,

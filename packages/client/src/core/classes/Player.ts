@@ -1,7 +1,7 @@
 import { Sprite } from './Sprite';
 import { Projectile } from './Projectile';
 import { Enemy } from './Enemy';
-import { PLAYER_ATTACKRANGE, PLAYER_HEIGHT, PLAYER_RADIUS_SPRITE, PLAYER_WEITH } from '../../constants/core.config';
+import { PLAYER_ATTACKRANGE, PLAYER_HEIGHT, PLAYER_RADIUS_SPRITE, PLAYER_WIDTH } from '../../constants/core.config';
 import { IProps } from '../models/models';
 
 export class Player extends Sprite {
@@ -11,7 +11,7 @@ export class Player extends Sprite {
 	frame = 0;
 	radius = PLAYER_RADIUS_SPRITE;
 	target: null | Enemy = null;
-	width = PLAYER_WEITH;
+	width = PLAYER_WIDTH;
 	height = PLAYER_HEIGHT;
 	constructor(props: IProps) {
 		super({ ...props });

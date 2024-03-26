@@ -1,5 +1,5 @@
 import { Sprite } from './Sprite';
-import { ENEMY_HEALTH, ENEMY_HEIGHT, ENEMY_WEITH } from '../../constants/core.config';
+import { ENEMY_HEALTH, ENEMY_HEIGHT, ENEMY_WIDTH } from '../../constants/core.config';
 import { IEnemy } from '../models/models';
 
 export class Enemy extends Sprite {
@@ -7,7 +7,7 @@ export class Enemy extends Sprite {
 	moving = true;
 	path;
 	health = ENEMY_HEALTH;
-	width = ENEMY_WEITH;
+	width = ENEMY_WIDTH;
 	height = ENEMY_HEIGHT;
 	radius = this.height;
 	constructor(props: IEnemy) {
