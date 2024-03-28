@@ -1,6 +1,9 @@
 import React, { FC, useMemo, useState } from 'react';
 import { Button, Flex } from 'antd';
-import { Countdown, HintCard, HintCardWrapper, StartGameTitle } from './StartGamePage.style';
+import { Countdown, HintCard, HintCardWrapper, StartGameTitle, EndGameModal } from './StartGamePage.style';
+import { EPATH } from '../../../models/models';
+import { EMODAL_TYPE } from '../../../components/Modal/models/models';
+import { useNavigate } from 'react-router';
 
 const TIME_REMAIN = Date.now() + 1.5 * 60000;
 const CARD_HINT = [
@@ -19,9 +22,16 @@ const CARD_HINT = [
  * */
 export const StartGamePage: FC = () => {
 	const [isDisabled, setIsDisabled] = useState(true);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const navigate = useNavigate();
+
 	const $countDown = useMemo(() => {
 		return <Countdown format="mm:ss" value={TIME_REMAIN} onFinish={() => setIsDisabled(false)} />;
 	}, []);
+
+	const goMainPage = () => navigate(EPATH.MAIN);
+
+	const restartGame = () => setIsModalOpen(!isModalOpen);
 
 	return (
 		<Flex vertical align="center" justify="center">
@@ -42,6 +52,16 @@ export const StartGamePage: FC = () => {
 				}}>
 				СТАРТ
 			</Button>
+			<EndGameModal
+				centered
+				type={EMODAL_TYPE.GAME_END}
+				open={isModalOpen}
+				onCancel={goMainPage}
+				onOk={restartGame}
+				cancelButtonProps={{ type: 'primary' }}
+				okButtonProps={{ type: 'default' }}
+				closeIcon={null}
+			/>
 		</Flex>
 	);
 };

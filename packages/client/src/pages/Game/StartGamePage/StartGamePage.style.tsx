@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DEEP_OCEAN, DEEP_PURPLE, LIGHT_PURPLE, ORANGE } from '../../../constants/color';
 import { Card, Statistic, Typography } from 'antd';
+import { Modal } from '../../../components/Modal/Modal';
 
 const { Title } = Typography;
 
@@ -41,5 +42,45 @@ export const HintCard = styled(Card)`
 
 	> .ant-card-body {
 		padding: 0;
+	}
+`;
+
+export const EndGameModal = styled(Modal)`
+	border-radius: 12px;
+	height: 260px;
+	width: 570px;
+
+	.ant-modal-title {
+		color: #f96767;
+		font-weight: bold;
+		font-size: 30px;
+		line-height: 45px;
+		text-align: center;
+	}
+
+	.ant-modal-body {
+		color: #ffc8c8;
+		text-align: center;
+		font-weight: bold;
+		margin: 16px 0 10px;
+		white-space: pre-wrap;
+	}
+
+	.ant-modal-footer {
+		display: flex;
+		justify-content: space-between;
+
+		.ant-btn-primary {
+			background-color: ${DEEP_OCEAN}25;
+			border: 1px dashed ${DEEP_PURPLE};
+			color: ${DEEP_PURPLE};
+			font-weight: bold;
+
+			&:hover {
+				background-color: ${DEEP_OCEAN}25;
+				color: ${ORANGE};
+				border: 1px dashed ${ORANGE};
+			}
+		}
 	}
 `;
